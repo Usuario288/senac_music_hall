@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model cliente {
+  id_cliente Int        @id @default(autoincrement())
+  nome       String     @db.VarChar(100)
+  cpf        String     @unique(map: "cpf") @db.Char(11)
+  email      String     @unique(map: "email") @db.VarChar(100)
+  ingresso   ingresso[]
+}
+
+model evento {
+  id_evento      Int        @id @default(autoincrement())
+  nome           String     @db.VarChar(100)
+  data           DateTime   @db.DateTime(0)
+  capacidade_max Int
+  ingresso       ingresso[]
+  setor          setor[]
+}
+
+model ingresso {
+  id_ingresso     Int                      @id @default(autoincrement())
+  id_cliente      Int
+  id_evento       Int
+  id_setor        Int
+  codigo          String                   @db.VarChar(100)
+  status_ingresso ingresso_status_ingresso
+  cliente         cliente                  @relation(fields: [id_cliente], references: [id_cliente], onUpdate: Restrict, map: "ingresso_ibfk_1")
+  evento          evento                   @relation(fields: [id_evento], references: [id_evento], onDelete: Cascade, onUpdate: Restrict, map: "ingresso_ibfk_3")
+  setor           setor                    @relation(fields: [id_setor], references: [id_setor], onUpdate: Restrict, map: "ingresso_ibfk_2")
+  validacao       validacao[]
+
+  @@index([id_cliente], map: "idx_ingresso_id_cliente")
+  @@index([id_evento], map: "idx_ingresso_id_evento")
+  @@index([id_setor], map: "idx_ingresso_id_setor")
+}
+
+model log_atividade {
+  id_log     Int      @id @default(autoincrement())
+  id_usuario Int
+  data       DateTime @default(now()) @db.Timestamp(0)
+  acao       String   @db.VarChar(100)
+  usuario    usuario  @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade, onUpdate: Restrict, map: "log_atividade_ibfk_1")
+
+  @@index([id_usuario], map: "idx_log_atividade_id_usuario")
+}
+
+model setor {
+  id_setor         Int                @id @default(autoincrement())
+  id_evento        Int
+  perfil_setor     setor_perfil_setor
+  capacidade_setor Int
+  ingresso         ingresso[]
+  evento           evento             @relation(fields: [id_evento], references: [id_evento], onDelete: Cascade, onUpdate: Restrict, map: "setor_ibfk_1")
+
+  @@index([id_evento], map: "idx_setor_id_evento")
+}
+
+model usuario {
+  id_usuario    Int             @id @default(autoincrement())
+  nome          String          @db.VarChar(100)
+  cpf           String          @unique(map: "cpf") @db.Char(11)
+  email         String          @unique(map: "email") @db.VarChar(100)
+  senha         String          @db.VarChar(100)
+  perfil        usuario_perfil
+  log_atividade log_atividade[]
+}
+
+model validacao {
+  id_validacao Int      @id @default(autoincrement())
+  id_ingresso  Int
+  data         DateTime @db.DateTime(0)
+  ingresso     ingresso @relation(fields: [id_ingresso], references: [id_ingresso], onDelete: Cascade, onUpdate: Restrict, map: "validacao_ibfk_1")
+
+  @@index([id_ingresso], map: "idx_validacao_id_ingresso")
+}
+
+enum usuario_perfil {
+  Administrador
+  Vendedor
+  Validador
+}
+
+enum setor_perfil_setor {
+  Publico_Geral @map("Publico Geral")
+  VIP
+  Imprensa
+}
+
+enum ingresso_status_ingresso {
+  Emitido
+  Pendente
+  Validado
+}

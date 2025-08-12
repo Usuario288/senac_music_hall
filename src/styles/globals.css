@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #a2ca02;
   --foreground: #171717;
 }
 
@@ -23,4 +23,24 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.azul_ocupacao_fundo {
+  background-color: #1331a1;
+}
+.laranja_ocupacao_fundo {
+  background-color: #f44528;
+}
+.verde_ocupacao_fundo {
+  background-color: #a2ca02;
+}
+
+.azul_ocupacao_texto {
+  color: #1331a1;
+}
+.laranja_ocupacao_texto {
+  color: #f44528;
+}
+.verde_ocupacao_texto {
+  color: #a2ca02;
 }
