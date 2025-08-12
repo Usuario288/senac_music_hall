@@ -1,0 +1,122 @@
+CREATE DATABASE senac_music;
+USE senac_music;
+
+CREATE TABLE usuario (
+    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(100) NOT NULL,
+    perfil ENUM('Administrador','Vendedor','Validador') NOT NULL
+);
+
+CREATE TABLE evento (
+    id_evento INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    data DATETIME NOT NULL,
+    capacidade_max INT NOT NULL
+);
+
+CREATE TABLE setor (
+    id_setor INT PRIMARY KEY AUTO_INCREMENT,
+    id_evento INT NOT NULL,
+    perfil_setor ENUM('Publico Geral','VIP','Imprensa') NOT NULL,
+    capacidade_setor INT NOT NULL,
+    FOREIGN KEY (id_evento) REFERENCES evento(id_evento) ON DELETE CASCADE,
+    INDEX idx_setor_id_evento (id_evento)
+);
+
+CREATE TABLE cliente (
+    id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE ingresso (
+    id_ingresso INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT NOT NULL,
+    id_evento INT NOT NULL,
+    id_setor INT NOT NULL,
+    codigo VARCHAR(100) NOT NULL,
+    status_ingresso ENUM('Emitido','Pendente','Validado') NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+    FOREIGN KEY (id_evento) REFERENCES evento(id_evento) ON DELETE CASCADE,
+    FOREIGN KEY (id_setor) REFERENCES setor(id_setor),
+    INDEX idx_ingresso_id_cliente (id_cliente),
+    INDEX idx_ingresso_id_evento (id_evento),
+    INDEX idx_ingresso_id_setor (id_setor)
+);
+
+CREATE TABLE validacao (
+    id_validacao INT PRIMARY KEY AUTO_INCREMENT,
+    id_ingresso INT NOT NULL,
+    data DATETIME NOT NULL,
+    FOREIGN KEY (id_ingresso) REFERENCES ingresso(id_ingresso) ON DELETE CASCADE,
+    INDEX idx_validacao_id_ingresso (id_ingresso)
+);
+
+CREATE TABLE log_atividade (
+    id_log INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    acao VARCHAR(100) NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    INDEX idx_log_atividade_id_usuario (id_usuario)
+);
+
+INSERT INTO usuario(nome, cpf, email, senha, perfil)
+VALUES 
+  ('Gabriel', '12345678900', 'gabriel@email.com', '$2b$10$7y1y6f2SJHQLEYQhu9jxpOq6JiP81J97ztiLG7d4x4or.gtnHRDs2', 'Administrador'),
+  ('Pedro', '12345678904', 'pedro@email.com', '$2b$10$V6kDfHeRxT3nz573KUiX4OJGDEW0ha2uQ/U7ZyVXcaAIQXVxIqvCi', 'Validador'),
+  ('Joao', '12345678903', 'joao@email.com', '$2b$10$qMy2NwtlIuUOmTA0jtbrQexC4/DF1Npj9uVXmY503Go3RVHW3WZ6K', 'Vendedor'),
+  ('Mariana', '12345678905', 'mariana@email.com', '$2b$10$uXRhCqZiTdeQLLrW2nxx6OgNReFqNIUoPRuVl6XyI4K9jXLDZDZjC', 'Vendedor'),
+  ('Ana', '12345678906', 'ana@email.com', '$2b$10$QoT9DjcmDkJYj7v91dh1x.K03zoOnKDNWzDMMo8z5daF2/xjzjIo2', 'Administrador');
+
+INSERT INTO evento(nome, data, capacidade_max)
+VALUES 
+  ('Senac_Music', '2025-05-04 00:00:00', 5000),
+  ('Festival Rock', '2025-06-10 00:00:00', 3000),
+  ('Jazz Nights', '2025-07-15 00:00:00', 2000),
+  ('Pop Party', '2025-08-20 00:00:00', 3500),
+  ('Electronic Vibes', '2025-09-25 00:00:00', 4000);
+
+INSERT INTO setor(id_evento, perfil_setor, capacidade_setor)
+VALUES
+  (1, 'Publico Geral', 800),
+  (1, 'Imprensa', 2200),
+  (1, 'VIP', 2000),
+  (2, 'Publico Geral', 500),
+  (2, 'VIP', 500);
+
+INSERT INTO cliente(nome, cpf, email)
+VALUES 
+  ('Gabriel', '12345678900', 'gabriel@email.com'),
+  ('Pedro', '12345678904', 'pedro@email.com'),
+  ('Joao', '12345678903', 'joao@email.com'),
+  ('Luciana', '12345678907', 'luciana@email.com'),
+  ('Carlos', '12345678908', 'carlos@email.com');
+
+INSERT INTO ingresso(id_setor, id_cliente, id_evento, codigo, status_ingresso)
+VALUES
+  (2, 3, 1, 'XPTO123', 'Emitido'),
+  (3, 2, 1, 'XYTZ123', 'Pendente'),
+  (1, 5, 1, 'ABCD123', 'Emitido'),
+  (4, 4, 2, 'EFGH456', 'Emitido'),
+  (5, 1, 2, 'IJKL789', 'Pendente');
+
+INSERT INTO validacao(id_ingresso, data)
+VALUES
+  (1, '2025-08-05 00:00:00'),
+  (2, '2025-09-06 00:00:00'),
+  (3, '2025-08-06 12:00:00'),
+  (4, '2025-06-11 18:30:00'),
+  (5, '2025-06-12 19:45:00');
+
+INSERT INTO log_atividade(id_usuario, data, acao)
+VALUES
+  (2, '2025-08-05 00:00:00', 'Logou'),
+  (3, '2025-09-06 00:00:00', 'Cadastro Evento'),
+  (1, '2025-07-01 14:30:00', 'Atualizou Ingresso'),
+  (4, '2025-07-25 09:00:00', 'Criou Cliente'),
+  (5, '2025-08-10 11:15:00', 'Deletou Evento');
