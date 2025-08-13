@@ -20,14 +20,16 @@ Este projeto é uma aplicação web completa para gerenciamento de eventos, seto
 ---
 
 ### 1️⃣ Clonar o repositório
-```bash
+
 git clone https://github.com/seu-usuario/senac_music_hall.git
 cd senac_music_hall
 npm install
 
-```bash
+
 
 # 🎵 Senac Music Hall - Sistema de Gestão de Eventos
+
+adicione o arquivo .env no root do projeto
 
 DATABASE_URL="mysql://root@localhost:3306/senac_music"
 DB_USER=root
