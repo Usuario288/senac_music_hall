@@ -25,3 +25,11 @@ git clone https://github.com/seu-usuario/senac_music_hall.git
 cd senac_music_hall
 npm install
 
+```bash
+
+# 🎵 Senac Music Hall - Sistema de Gestão de Eventos
+
+DATABASE_URL="mysql://root@localhost:3306/senac_music"
+DB_USER=root
+DB_PASSWORD=
+JWT_SECRET=UESCIV
