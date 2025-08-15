@@ -76,7 +76,7 @@ export default function CrudIngressos() {
           ))}
         </select>
 
-        <select className="border-r-1" value={idEvento} onChange={(e) => setIdEvento(e.target.value)} required>
+        <select className="border-r-1" value={idEvento} onChange={(e) => setIdEvento(e.target.value)}  required>
           <option value="">Selecione Evento</option>
           {eventos.map((e) => (
             <option key={e.id_evento} value={e.id_evento}>
@@ -85,7 +85,7 @@ export default function CrudIngressos() {
           ))}
         </select>
 
-        <select className="border-r-1" value={idSetor} onChange={(e) => setIdSetor(e.target.value)} required>
+        <select className="border-r-1" value={idSetor} onChange={(e) => setIdSetor(e.target.value)}  required>
           <option value="">Selecione Setor</option>
           {setores
             .filter((s) => s.id_evento === Number(idEvento))

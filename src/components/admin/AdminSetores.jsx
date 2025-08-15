@@ -43,6 +43,7 @@ export default function CrudSetores() {
         <select
           value={idEvento}
           onChange={(e) => setIdEvento(e.target.value)}
+          onFocus={carregarDados}
           required
           className="w-full border px-3 py-2 rounded-md"
         >
