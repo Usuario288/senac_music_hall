@@ -67,7 +67,7 @@ export default function CrudIngressos() {
 
       {/* Formulário */}
       <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-        <select className="border-r-1" value={idCliente} onChange={(e) => setIdCliente(e.target.value)} required>
+        <select className="border-r-1" value={idCliente} onChange={(e) => setIdCliente(e.target.value)} onFocus={carregarDados} required>
           <option value="">Selecione Cliente</option>
           {clientes.map((c) => (
             <option key={c.id_cliente} value={c.id_cliente}>

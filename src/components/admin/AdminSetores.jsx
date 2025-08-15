@@ -60,7 +60,7 @@ export default function CrudSetores() {
           onChange={(e) => setPerfilSetor(e.target.value)}
           className="w-full border px-3 py-2 rounded-md"
         >
-          <option value="Publico Geral">Publico Geral</option>
+          <option value="Publico_Geral">Publico Geral</option>
           <option value="VIP">VIP</option>
           <option value="Imprensa">Imprensa</option>
         </select>
